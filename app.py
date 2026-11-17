@@ -31,7 +31,7 @@ ADDON_ID = "org.bsplay.addon"
 ADDON_VERSION = "1.0.0"
 ADDON_DESCRIPTION = "bsPlay - Xtream Codes Addon para Stremio com F4M Proxy Embutido"
 
-ICON_URL = "https://raw.githubusercontent.com/brunosoares9/oneplay_stremio/refs/heads/main/Icon.svg"
+ICON_URL = "https://raw.githubusercontent.com/brunosoares9/bsplay_stremio/refs/heads/main/Icon.svg"
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'
