@@ -21,9 +21,9 @@ def _d(s):
     return base64.b64decode(s).decode()
 
 
-XC_HOST = _d("aHR0cDovL2Fwb250YWFpbWV1cGF0cmFvLmxhdDo4MA==")
-XC_USERNAME = _d("amFqYWl0YQ==")
-XC_PASSWORD = _d("MTIzNDU2")
+XC_HOST = _d("aHR0cDovL21ldWNhbmFsLnh5ejo4ODgw")
+XC_USERNAME = _d("MDQ5MjI3MTAzNA==")
+XC_PASSWORD = _d("MDM4MTE2MzAyNw==")
 F4M_PROXY = ""
 
 ADDON_NAME = "OnePlay"
