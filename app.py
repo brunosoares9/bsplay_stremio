@@ -26,10 +26,10 @@ XC_USERNAME = _d("MDQ5MjI3MTAzNA==")
 XC_PASSWORD = _d("MDM4MTE2MzAyNw==")
 F4M_PROXY = ""
 
-ADDON_NAME = "OnePlay"
-ADDON_ID = "org.oneplay.addon"
+ADDON_NAME = "bsPlay"
+ADDON_ID = "org.bsplay.addon"
 ADDON_VERSION = "1.0.0"
-ADDON_DESCRIPTION = "OnePlay - Xtream Codes Addon para Stremio com F4M Proxy Embutido"
+ADDON_DESCRIPTION = "bsplay - Xtream Codes Addon para Stremio com F4M Proxy Embutido"
 
 ICON_URL = "https://raw.githubusercontent.com/zoreu/oneplay_stremio/refs/heads/main/icon.png"
 
