@@ -1,2 +1,2 @@
-# oneplay_stremio
-OnePlay Stremio Addon
+# bsplay_stremio
+BsPlay Stremio Addon
