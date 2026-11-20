@@ -324,11 +324,11 @@ def fetch_mp4(url, range_header=None, method='GET', max_retries=PROXY_MAX_RETRIE
 
 def get_base_url():
     if request.headers.get('X-Forwarded-Host'):
-        scheme = request.headers.get('X-Forwarded-Proto', 'https')
         host = request.headers.get('X-Forwarded-Host')
-        final = f"{scheme}://{host}"
+        final = f"https://{host}"
     else:
         final = request.url_root.rstrip('/')
+        final = re.sub(r'^http://', 'https://', final)
     if not 'localhost' in final and not '127.0.0.1' in final and not '.' in final:
         final = final + '.baby-beamup.club'
     return final
@@ -649,8 +649,8 @@ def index():
         <h1>bsPlay</h1>
         <p class="subtitle">Addon Stremio para Xtream Codes com F4M Proxy</p>
 
-        <a href="stremio://addon?url=""" + quote(manifest_url) + """\" class="btn btn-stremio">📱 Instalar no App Stremio</a>
-        <a href="https://web.stremio.com/#!/addons/""" + quote(manifest_url) + """\" target="_blank" class="btn btn-web">🌐 Instalar no Stremio Web</a>
+        <a href="stremio://addon?url=""" + quote(manifest_url, safe='') + """\" class="btn btn-stremio">📱 Instalar no App Stremio</a>
+        <a href="https://web.stremio.com/#!/addons/""" + quote(manifest_url, safe='') + """\" target="_blank" class="btn btn-web">🌐 Instalar no Stremio Web</a>
         <button onclick="copyManifest()" class="btn btn-copy">📋 Copiar URL do Manifest</button>
 
         <div class="manifest-box" id="manifestUrl">""" + manifest_url + """</div>
@@ -686,18 +686,25 @@ def index():
 
 @app.route('/manifest.json')
 def manifest_root():
-    movie_cats = xc_request('get_vod_categories')
-    series_cats = xc_request('get_series_categories')
-    live_cats = xc_request('get_live_categories')
+    with CATEGORY_LOCK:
+        has_movie = bool(CATEGORY_MAP.get('movie'))
+        has_series = bool(CATEGORY_MAP.get('series'))
+        has_tv = bool(CATEGORY_MAP.get('tv'))
+
+    if not (has_movie and has_series and has_tv):
+        movie_cats = xc_request('get_vod_categories')
+        series_cats = xc_request('get_series_categories')
+        live_cats = xc_request('get_live_categories')
+
+        with CATEGORY_LOCK:
+            CATEGORY_MAP['movie'] = build_category_map(movie_cats)
+            CATEGORY_MAP['series'] = build_category_map(series_cats)
+            CATEGORY_MAP['tv'] = build_category_map(live_cats)
 
     with CATEGORY_LOCK:
-        CATEGORY_MAP['movie'] = build_category_map(movie_cats)
-        CATEGORY_MAP['series'] = build_category_map(series_cats)
-        CATEGORY_MAP['tv'] = build_category_map(live_cats)
-
-    movie_genres = list(CATEGORY_MAP['movie'].keys())
-    series_genres = list(CATEGORY_MAP['series'].keys())
-    live_genres = list(CATEGORY_MAP['tv'].keys())
+        movie_genres = list(CATEGORY_MAP['movie'].keys())
+        series_genres = list(CATEGORY_MAP['series'].keys())
+        live_genres = list(CATEGORY_MAP['tv'].keys())
 
     return jsonify({
         'id': ADDON_ID,
@@ -1770,3 +1777,7 @@ def handle_mp4_proxy(url, cache, range_header, method):
 @app.route('/<path:path>')
 def catch_all(path):
     return jsonify({'error': 'Rota não encontrada'}), 404
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80)
